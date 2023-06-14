@@ -10,10 +10,16 @@ fn main() {
     println!("I have generated a random number between 1 and 100. Please keep entering your guesses until you get the correct answer.");
 
     for _ in 1..=num_iter {
-        println!("Enter your guess:");
         let mut buffer: String = String::new();
+
+        println!("Enter your guess:");
         _ = io::stdin().read_line(&mut buffer);
         guess = buffer.trim().parse().unwrap();
+
+        if guess > 100 || guess < 1 {
+            println!("Your guess of {guess} was not between 1 and 100 inclusive.");
+            continue;
+        }
 
         if guess == rand_num {
             println!("Congratulations, your guess of {guess} was correct!");
@@ -31,6 +37,4 @@ fn main() {
     if !correct_guess_flag {
         println!("Max number of guesses ({num_iter}) exceeded.")
     }
-
-    println!("rand_num: {rand_num}, guess: {guess}");
 }
