@@ -1,3 +1,6 @@
+use rand::prelude::*;
+
 fn main() {
-    println!("Hello, world!");
+    let number: i32 = thread_rng().gen_range(1..101);
+    println!("{number}");
 }
