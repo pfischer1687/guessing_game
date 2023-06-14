@@ -3,7 +3,7 @@ use std::io;
 
 fn main() {
     let rand_num: i32 = thread_rng().gen_range(1..101);
-    let mut guess: i32 = 0;
+    let mut guess: i32;
     let num_iter: i32 = 100;
     let mut correct_guess_flag: bool = false;
     
