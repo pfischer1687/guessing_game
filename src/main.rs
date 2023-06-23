@@ -54,5 +54,4 @@ fn main() {
         }
     }
     println!("Max number of guesses ({num_iter}) exceeded.");
-    return;
 }
