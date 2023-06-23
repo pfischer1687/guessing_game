@@ -1,12 +1,15 @@
 use rand::prelude::*;
 use std::io;
+use std::num::ParseIntError;
 
 fn main() {
-    let rand_num: i32 = thread_rng().gen_range(1..101);
-    let mut guess: i32;
-    let num_iter: i32 = 5;
-    let mut correct_guess_flag: bool = false;
+    
+    let mut stdin_result: Result<usize, io::Error>;
     let mut _stdin: usize;
+    let mut guess_result: Result<i32, ParseIntError>;
+    let mut _guess: i32;
+    let num_iter: i32 = 5;
+    let rand_num: i32 = thread_rng().gen_range(1..101);
     
     println!("I have generated a random number between 1 and 100. Please keep entering your guesses until you get the correct answer.");
 
@@ -14,28 +17,45 @@ fn main() {
         let mut buffer: String = String::new();
 
         println!("Enter your guess:");
-        _stdin = io::stdin().read_line(&mut buffer).expect("Failed to read the input line.");
-        guess = buffer.trim().parse().unwrap();
+        stdin_result = io::stdin().read_line(&mut buffer);
 
-        if guess > 100 || guess < 1 {
-            println!("Your guess of {guess} was not between 1 and 100 inclusive.");
-            continue;
-        }
+        _stdin = match stdin_result {
+            Ok(s) => s,
+            Err(e) => {
+                println!("Error: {e}");
+                continue;
+            },
+        };
 
-        if guess > rand_num {
-            println!("Your guess of {guess} was too high.");
-        }
-        else if guess < rand_num {
-            println!("Your guess of {guess} was too low.");
-        }
-        else {
-            println!("Congratulations, you correctly guessed {guess} in {n} tries!");
-            correct_guess_flag = true;
-            break;
-        }
+        guess_result = buffer.trim().parse();
+
+        let _guess = match guess_result {
+            Ok(g) => {
+                if g > 100 || g < 1 {
+                    println!("Your guess of {g} was not between 1 and 100 inclusive.");
+                    continue;
+                }
+
+                if g > rand_num {
+                    println!("Your guess of {g} was too high.");
+                    continue;
+                }
+                else if g < rand_num {
+                    println!("Your guess of {g} was too low.");
+                    continue;
+                }
+                else {
+                    println!("Congratulations, you correctly guessed {rand_num} in {n} tries!");
+                    return;
+                }
+            }
+            Err(e) => {
+                println!("Error: {e}");
+                continue;
+            },
+        };
     }
 
-    if !correct_guess_flag {
-        println!("Max number of guesses ({num_iter}) exceeded.")
-    }
+    println!("Max number of guesses ({num_iter}) exceeded.");
+    return;
 }
